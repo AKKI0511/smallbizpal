@@ -1,7 +1,7 @@
 # SmallBizPal 🚀
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue)](https://www.python.org/downloads/)
 [![ADK](https://img.shields.io/badge/Built%20with-Google%20ADK-4285F4)](https://google.github.io/adk-docs/)
 
 > **AI-Powered Small Business Assistant** - A sophisticated multi-agent system built with Google ADK to help small businesses thrive through intelligent automation.
@@ -57,7 +57,7 @@ SmallBizPal
 
 ### Prerequisites
 
-- Python 3.12 or higher
+- Python 3.11 or higher
 - Google API Key for Gemini models ([Get one here](https://aistudio.google.com/app/apikey))
 
 ### Installation

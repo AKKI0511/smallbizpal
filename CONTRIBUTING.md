@@ -6,7 +6,7 @@ We welcome contributions to SmallBizPal! This document provides guidelines for c
 
 ### Prerequisites
 
-- Python 3.12 or higher
+- Python 3.11 or higher
 - [uv](https://docs.astral.sh/uv/) package manager
 - Google API Key for Gemini models ([Get one here](https://aistudio.google.com/app/apikey))
 
@@ -18,26 +18,14 @@ We welcome contributions to SmallBizPal! This document provides guidelines for c
    cd smallbizpal
    ```
 
-2. **Set up virtual environment**
+2. **Install dependencies**
    ```bash
-   python -m venv .venv
-   # Windows PowerShell
-   .venv\Scripts\Activate.ps1
-   # Windows CMD
-   .venv\Scripts\activate.bat
-   # macOS/Linux
-   source .venv/bin/activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   uv pip install -e .
-   uv pip install pytest pytest-asyncio pytest-cov black isort flake8 mypy pre-commit
+   uv sync --group dev
    ```
 
 4. **Set up pre-commit hooks**
    ```bash
-   pre-commit install
+   uv run pre-commit install
    ```
 
 5. **Configure environment**
@@ -60,14 +48,13 @@ We use several tools to maintain code quality:
 Run all checks:
 ```bash
 # Format code
-black smallbizpal/ tests/
-isort smallbizpal/ tests/
+make format
 
 # Lint code
-flake8 smallbizpal/ tests/
+make lint
 
 # Type check
-mypy smallbizpal/
+make type-check
 ```
 
 ### Testing
@@ -76,16 +63,10 @@ We use pytest for testing. All new features should include tests.
 
 ```bash
 # Run all tests
-pytest
+make test
 
 # Run with coverage
-pytest --cov=smallbizpal --cov-report=html
-
-# Run specific test file
-pytest tests/test_specific.py
-
-# Run tests for specific agent
-pytest tests/unit/test_business_discovery/
+make coverage
 ```
 
 ### ADK Evaluation
@@ -116,11 +97,7 @@ python scripts/run_evaluation.py
 
 3. **Run tests and checks**
    ```bash
-   pytest
-   black smallbizpal/ tests/
-   isort smallbizpal/ tests/
-   flake8 smallbizpal/ tests/
-   mypy smallbizpal/
+   make check
    ```
 
 4. **Commit your changes**

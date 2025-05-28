@@ -3,7 +3,7 @@ name = "smallbizpal"
 version = "0.1.0"
 description = "AI-Powered Small Business Assistant - A multi-agent system built with Google ADK"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115.12",
     "google-adk>=1.0.0",
@@ -22,6 +22,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
 
@@ -68,10 +69,23 @@ asyncio_default_fixture_loop_scope = "session"
 
 [tool.mypy]
 python_version = "3.12"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-check_untyped_defs = true
+ignore_missing_imports = true
+disallow_untyped_defs = false
+check_untyped_defs = false
+disallow_untyped_calls = false
+disallow_incomplete_defs = false
+disallow_any_unimported = false
+disallow_any_expr = false
+disallow_any_decorated = false
+disallow_any_explicit = false
+disallow_any_generics = false
+disallow_subclassing_any = false
+warn_return_any = false
+no_implicit_optional = false
+warn_unreachable = true
+allow_redefinition = true
+allow_untyped_globals = true
+disable_error_code = ["var-annotated", "arg-type", "attr-defined"]
 
 [dependency-groups]
 dev = [

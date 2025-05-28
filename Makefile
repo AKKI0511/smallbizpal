@@ -19,7 +19,7 @@ check: ## Run all checks (EXACTLY matches CI pipeline)
 	uv run flake8 smallbizpal/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 	uv run black --check smallbizpal/ tests/
 	uv run isort --check-only smallbizpal/ tests/
-	uv run mypy smallbizpal/ --ignore-missing-imports
+	uv run mypy smallbizpal/
 	uv run pytest tests/ --cov=smallbizpal --cov-report=xml --cov-report=term-missing
 
 fix: ## Fix formatting and linting issues automatically
@@ -39,7 +39,7 @@ format: ## Check formatting only
 	uv run isort --check-only smallbizpal/ tests/
 
 type-check: ## Run type checking only
-	uv run mypy smallbizpal/ --ignore-missing-imports
+	uv run mypy smallbizpal/
 
 coverage: ## Generate detailed coverage report
 	uv run pytest tests/ --cov=smallbizpal --cov-report=html --cov-report=term-missing
