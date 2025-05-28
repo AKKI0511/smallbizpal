@@ -12,6 +12,6 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from .agent import orchestrator_agent
+from .knowledge_base import KnowledgeBaseService, knowledge_base_service
 
-__all__ = ["orchestrator_agent"]
+__all__ = ["knowledge_base_service", "KnowledgeBaseService"]

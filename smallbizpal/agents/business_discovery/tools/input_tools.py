@@ -12,6 +12,16 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from .agent import orchestrator_agent
 
-__all__ = ["orchestrator_agent"]
+def ask_user_input(prompt: str) -> str:
+    """Ask the user for input with a specific prompt.
+
+    Args:
+        prompt: The question or prompt to show to the user
+
+    Returns:
+        The user's response as a string
+    """
+    # In a real implementation, this would integrate with the UI
+    # For now, it's a placeholder that would be handled by the ADK framework
+    return f"User input for: {prompt}"

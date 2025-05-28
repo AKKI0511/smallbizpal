@@ -12,6 +12,6 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from .agent import orchestrator_agent
+from .logging import logger, setup_logging
 
-__all__ = ["orchestrator_agent"]
+__all__ = ["setup_logging", "logger"]
