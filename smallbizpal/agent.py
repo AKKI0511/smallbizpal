@@ -1,3 +1,16 @@
+#   Copyright 2025 Akshat Deepak Joshi
+
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+
+#       http://www.apache.org/licenses/LICENSE-2.0
+
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
 """
 SmallBizPal - AI-Powered Small Business Assistant
 
@@ -5,28 +18,19 @@ This is the main entry point for the SmallBizPal ADK multi-agent system.
 According to ADK conventions, this file must contain a 'root_agent' variable.
 """
 
-from google.adk.agents import LlmAgent
+from smallbizpal.agents import business_discovery_agent, orchestrator_agent
 
-# from google.adk.tools import google_search  # Will be imported when needed
+# The orchestrator agent serves as our root agent and coordinates all other agents
+root_agent = orchestrator_agent
 
-# For now, we'll create a basic orchestrator agent
-# The actual multi-agent implementation will be added later
-root_agent = LlmAgent(
-    name="smallbizpal_orchestrator",
-    model="gemini-2.0-flash-exp",
-    description="SmallBizPal Orchestrator - coordinates all business assistance tasks",
-    instruction="""You are SmallBizPal, an AI assistant designed to help small businesses with:
-
-    1. Business Discovery: Understanding their business, goals, and target audience
-    2. Marketing Generation: Creating marketing materials and content
-    3. Customer Engagement: Handling customer interactions and lead management
-    4. Performance Reporting: Providing insights and reports on business activities
-
-    You should greet users warmly and help them identify which aspect of their business
-    they'd like assistance with. Guide them through the process step by step.""",
-    # tools=[],  # Tools will be added as we implement each agent
-    # sub_agents=[],  # Sub-agents will be added as we implement the multi-agent system
-)
+# Configure sub-agents for the orchestrator
+root_agent.sub_agents = [
+    business_discovery_agent,
+    # TODO: Add other agents as they are implemented
+    # marketing_generator_agent,
+    # customer_engagement_agent,
+    # performance_reporting_agent
+]
 
 # Export for easy importing
 __all__ = ["root_agent"]
