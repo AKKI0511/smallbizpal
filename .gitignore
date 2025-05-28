@@ -177,3 +177,6 @@ cython_debug/
 .cursor/
 guides/
 
+# Project specific
+data/
+evaluation/
