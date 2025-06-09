@@ -16,14 +16,30 @@ from google.adk.agents import LlmAgent
 
 from .config import AGENT_NAME, DESCRIPTION, INSTRUCTION, MODEL_NAME, TOOLS_CONFIG
 from .tools.input_tools import ask_user_input
-from .tools.storage_tools import store_business_data
+from .tools.storage_tools import (
+    get_all_business_data,
+    get_business_profile_status,
+    search_business_data,
+    store_business_data,
+)
 
 # Build tools list based on config
 tools = []
-if TOOLS_CONFIG.get("ask_user_input", {}).get("enabled", True):
+
+# Input tools
+if TOOLS_CONFIG.get("ask_user_input", {}).get("enabled", False):
     tools.append(ask_user_input)
+
+# Storage tools - simple and flexible
 if TOOLS_CONFIG.get("store_business_data", {}).get("enabled", True):
-    tools.append(store_business_data)
+    tools.extend(
+        [
+            store_business_data,  # type: ignore
+            get_business_profile_status,  # type: ignore
+            get_all_business_data,  # type: ignore
+            search_business_data,  # type: ignore
+        ]
+    )
 
 business_discovery_agent = LlmAgent(
     name=AGENT_NAME,
@@ -32,3 +48,5 @@ business_discovery_agent = LlmAgent(
     description=DESCRIPTION,
     tools=tools,
 )
+
+root_agent = business_discovery_agent
