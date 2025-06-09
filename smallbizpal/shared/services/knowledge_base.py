@@ -14,7 +14,7 @@
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from smallbizpal.shared.models.business_profile import BusinessProfile
 
@@ -49,20 +49,57 @@ class KnowledgeBaseService:
 
     def _save_data(self) -> None:
         """Save data to storage file."""
-        with open(self.storage_path, "w") as f:
-            json.dump(self._data, f, indent=2, default=str)
 
-    def store_business_profile(self, profile_data: Dict[str, Any]) -> None:
-        """Store or update business profile information.
+        def json_serializer(obj):
+            """Custom JSON serializer for datetime and other objects."""
+            if hasattr(obj, "isoformat"):
+                return obj.isoformat()
+            elif hasattr(obj, "model_dump"):
+                return obj.model_dump()
+            elif hasattr(obj, "__dict__"):
+                return obj.__dict__
+            return str(obj)
+
+        with open(self.storage_path, "w") as f:
+            json.dump(self._data, f, indent=2, default=json_serializer)
+
+    def update_business_profile(self, new_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Update business profile with any new data.
 
         Args:
-            profile_data: Dictionary containing business profile data
+            new_data: Dictionary containing any business information
+
+        Returns:
+            Dictionary with update status and information
         """
-        # Update existing profile or create new one
-        current_profile = self._data.get("business_profile", {})
-        current_profile.update(profile_data)
-        self._data["business_profile"] = current_profile
-        self._save_data()
+        try:
+            # Get existing profile or create new one
+            profile = self.get_business_profile()
+            if profile is None:
+                profile = BusinessProfile()
+
+            # Update with new data
+            profile.update_data(new_data)
+
+            # Store the updated profile
+            self._data["business_profile"] = profile.model_dump()
+            self._save_data()
+
+            return {
+                "status": "success",
+                "message": f"Successfully updated business profile with {len(new_data)} new fields",
+                "updated_fields": list(new_data.keys()),
+                "total_fields": len(profile.data),
+                "total_updates": profile.total_updates,
+            }
+
+        except Exception as e:
+            return {
+                "status": "error",
+                "message": f"Error updating business profile: {str(e)}",
+                "updated_fields": [],
+                "total_fields": 0,
+            }
 
     def get_business_profile(self) -> Optional[BusinessProfile]:
         """Retrieve the current business profile.
@@ -72,15 +109,64 @@ class KnowledgeBaseService:
         """
         profile_data = self._data.get("business_profile")
         if profile_data:
-            return BusinessProfile.from_dict(profile_data)
+            try:
+                return BusinessProfile.model_validate(profile_data)
+            except Exception:
+                # Handle any legacy data
+                return BusinessProfile(data=profile_data)
         return None
 
-    def store_marketing_asset(self, asset_data: Dict[str, Any]) -> None:
-        """Store marketing asset information.
+    def get_business_data(self) -> Dict[str, Any]:
+        """Get all business data as simple dictionary.
+
+        Returns:
+            All business data or empty dict if no profile exists
+        """
+        profile = self.get_business_profile()
+        if profile:
+            return profile.get_all_data()
+        return {}
+
+    def search_business_data(self, search_terms: List[str]) -> Dict[str, Any]:
+        """Search business data for specific terms.
 
         Args:
-            asset_data: Dictionary containing marketing asset data
+            search_terms: List of terms to search for
+
+        Returns:
+            Dictionary of matching business data
         """
+        profile = self.get_business_profile()
+        if profile:
+            return profile.search_data(search_terms)
+        return {}
+
+    def get_profile_summary(self) -> Dict[str, Any]:
+        """Get a summary of the current business profile.
+
+        Returns:
+            Summary information about the profile
+        """
+        profile = self.get_business_profile()
+        if profile:
+            summary = profile.get_summary()
+            summary["profile_exists"] = True
+            return summary
+        else:
+            return {
+                "profile_exists": False,
+                "total_fields": 0,
+                "has_data": False,
+                "message": "No business profile exists yet",
+            }
+
+    # Legacy methods for backward compatibility
+    def store_business_profile(self, profile_data: Dict[str, Any]) -> None:
+        """Legacy method - redirects to update_business_profile."""
+        self.update_business_profile(profile_data)
+
+    def store_marketing_asset(self, asset_data: Dict[str, Any]) -> None:
+        """Store marketing asset information."""
         if "marketing_assets" not in self._data:
             self._data["marketing_assets"] = []
 

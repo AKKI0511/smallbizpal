@@ -12,80 +12,81 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
+
+from pydantic import BaseModel, Field
 
 
-@dataclass
-class BusinessProfile:
-    """Data model for storing comprehensive business information."""
+class BusinessProfile(BaseModel):
+    """Comprehensive business profile model optimized for LLM interactions."""
 
-    # Basic business information
-    business_name: Optional[str] = None
-    industry: Optional[str] = None
-    business_type: Optional[str] = None  # LLC, Corp, Sole Proprietorship, etc.
-    location: Optional[str] = None
-    website: Optional[str] = None
-
-    # Products and services
-    products_services: List[str] = field(default_factory=list)
-    unique_value_proposition: Optional[str] = None
-    pricing_model: Optional[str] = None
-
-    # Target audience
-    target_audience: Optional[str] = None
-    customer_demographics: Dict[str, Any] = field(default_factory=dict)
-    customer_pain_points: List[str] = field(default_factory=list)
-
-    # Brand and messaging
-    brand_voice: Optional[str] = None
-    brand_personality: Optional[str] = None
-    key_messages: List[str] = field(default_factory=list)
-
-    # Business goals and challenges
-    business_goals: List[str] = field(default_factory=list)
-    challenges: List[str] = field(default_factory=list)
-    success_metrics: List[str] = field(default_factory=list)
-
-    # Marketing and digital presence
-    current_marketing_activities: List[str] = field(default_factory=list)
-    social_media_presence: Dict[str, str] = field(default_factory=dict)
-    marketing_budget: Optional[str] = None
-
-    # Competitive landscape
-    competitors: List[str] = field(default_factory=list)
-    competitive_advantages: List[str] = field(default_factory=list)
+    # Core flexible data storage - this is where everything goes
+    data: Dict[str, Any] = Field(
+        default_factory=dict,
+        description="All business information stored as flexible key-value pairs",
+    )
 
     # Metadata
-    created_at: datetime = field(default_factory=datetime.now)
-    updated_at: datetime = field(default_factory=datetime.now)
-    completion_status: Dict[str, bool] = field(default_factory=dict)
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
+    total_updates: int = Field(
+        default=0, description="Number of times profile has been updated"
+    )
 
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert the business profile to a dictionary."""
-        result = {}
-        for key, value in self.__dict__.items():
-            if isinstance(value, datetime):
-                result[key] = value.isoformat()
-            else:
-                result[key] = value
-        return result
+    def update_data(self, new_data: Dict[str, Any]) -> None:
+        """Update business data with new information.
 
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "BusinessProfile":
-        """Create a BusinessProfile from a dictionary."""
-        # Handle datetime fields
-        if "created_at" in data and isinstance(data["created_at"], str):
-            data["created_at"] = datetime.fromisoformat(data["created_at"])
-        if "updated_at" in data and isinstance(data["updated_at"], str):
-            data["updated_at"] = datetime.fromisoformat(data["updated_at"])
+        Args:
+            new_data: Dictionary with any business information
+        """
+        self.data.update(new_data)
+        self.updated_at = datetime.now()
+        self.total_updates += 1
 
-        return cls(**data)
+    def get_all_data(self) -> Dict[str, Any]:
+        """Get all stored business data.
 
-    def update_field(self, field_name: str, value: Any) -> None:
-        """Update a specific field and timestamp."""
-        if hasattr(self, field_name):
-            setattr(self, field_name, value)
-            self.updated_at = datetime.now()
-            self.completion_status[field_name] = True
+        Returns:
+            All business data as dictionary
+        """
+        return self.data.copy()
+
+    def search_data(self, search_terms: List[str]) -> Dict[str, Any]:
+        """Search for data containing specific terms.
+
+        Args:
+            search_terms: List of terms to search for in keys or values
+
+        Returns:
+            Dictionary of matching key-value pairs
+        """
+        results = {}
+        search_terms_lower = [term.lower() for term in search_terms]
+
+        for key, value in self.data.items():
+            key_lower = key.lower()
+            value_str = str(value).lower()
+
+            # Check if any search term appears in key or value
+            if any(
+                term in key_lower or term in value_str for term in search_terms_lower
+            ):
+                results[key] = value
+
+        return results
+
+    def get_summary(self) -> Dict[str, Any]:
+        """Get a summary of the business profile.
+
+        Returns:
+            Summary information about the profile
+        """
+        return {
+            "total_fields": len(self.data),
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+            "total_updates": self.total_updates,
+            "sample_fields": list(self.data.keys())[:10],  # First 10 field names
+            "has_data": len(self.data) > 0,
+        }
