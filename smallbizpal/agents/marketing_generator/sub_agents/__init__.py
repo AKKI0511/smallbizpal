@@ -12,6 +12,8 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from .agent import marketing_generator_agent
+from .content_creation_agent import content_creation_agent
 
-__all__ = ["marketing_generator_agent"]
+__all__ = [
+    "content_creation_agent",
+]
