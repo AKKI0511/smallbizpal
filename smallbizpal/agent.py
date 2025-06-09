@@ -18,7 +18,11 @@ This is the main entry point for the SmallBizPal ADK multi-agent system.
 According to ADK conventions, this file must contain a 'root_agent' variable.
 """
 
-from smallbizpal.agents import business_discovery_agent, orchestrator_agent
+from smallbizpal.agents import (
+    business_discovery_agent,
+    marketing_generator_agent,
+    orchestrator_agent,
+)
 
 # The orchestrator agent serves as our root agent and coordinates all other agents
 root_agent = orchestrator_agent
@@ -26,8 +30,8 @@ root_agent = orchestrator_agent
 # Configure sub-agents for the orchestrator
 root_agent.sub_agents = [
     business_discovery_agent,
+    marketing_generator_agent,
     # TODO: Add other agents as they are implemented
-    # marketing_generator_agent,
     # customer_engagement_agent,
     # performance_reporting_agent
 ]

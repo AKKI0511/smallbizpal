@@ -13,17 +13,17 @@
 #   limitations under the License.
 
 from .business_discovery import business_discovery_agent
+from .marketing_generator import marketing_generator_agent
 from .orchestrator import orchestrator_agent
 
 # TODO: Import other agents when they are created
-# from .marketing_generator import marketing_generator_agent
 # from .customer_engagement import customer_engagement_agent
 # from .performance_reporting import performance_reporting_agent
 
 __all__ = [
     "orchestrator_agent",
     "business_discovery_agent",
-    # "marketing_generator_agent",
+    "marketing_generator_agent",
     # "customer_engagement_agent",
     # "performance_reporting_agent"
 ]
