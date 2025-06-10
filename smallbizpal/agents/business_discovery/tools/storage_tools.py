@@ -12,23 +12,110 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 
 def store_business_data(data: Dict[str, Any]) -> str:
-    """Store business information in the knowledge base.
+    """Store any business information in the knowledge base.
+
+    This tool accepts any dictionary of business information and stores it.
+    No specific schema is required - just provide key-value pairs of business data.
 
     Args:
-        data: Dictionary containing business information to store
+        data: Dictionary containing any business information (e.g., {"company_name": "ABC Corp", "industry": "tech"})
 
     Returns:
-        Confirmation message of successful storage
+        Confirmation message with storage results
     """
-    # Import here to avoid circular imports
     from smallbizpal.shared.services.knowledge_base import knowledge_base_service
 
     try:
-        knowledge_base_service.store_business_profile(data)
-        return f"Successfully stored business data: {list(data.keys())}"
+        result = knowledge_base_service.update_business_profile(data)
+
+        if result["status"] == "success":
+            return (
+                f"✅ Successfully stored business information!\n"
+                f"Added fields: {', '.join(result['updated_fields'])}\n"
+                f"Total fields in profile: {result['total_fields']}\n"
+                f"Profile updates: {result['total_updates']}"
+            )
+        else:
+            return f"❌ {result['message']}"
+
     except Exception as e:
-        return f"Error storing business data: {str(e)}"
+        return f"❌ Error storing business data: {str(e)}"
+
+
+def get_business_profile_status() -> str:
+    """Get current business profile status and summary.
+
+    Returns:
+        Summary of what business information has been collected so far
+    """
+    from smallbizpal.shared.services.knowledge_base import knowledge_base_service
+
+    try:
+        summary = knowledge_base_service.get_profile_summary()
+
+        if summary["profile_exists"]:
+            return (
+                f"📊 Business Profile Status:\n"
+                f"Total fields stored: {summary['total_fields']}\n"
+                f"Last updated: {summary['updated_at']}\n"
+                f"Total updates: {summary['total_updates']}\n"
+                f"Sample fields: {', '.join(summary['sample_fields'])}"
+            )
+        else:
+            return "📄 No business profile exists yet. Start collecting business information!"
+
+    except Exception as e:
+        return f"❌ Error getting profile status: {str(e)}"
+
+
+def get_all_business_data() -> str:
+    """Get all stored business data.
+
+    Returns:
+        All business information that has been collected
+    """
+    from smallbizpal.shared.services.knowledge_base import knowledge_base_service
+
+    try:
+        data = knowledge_base_service.get_business_data()
+
+        if data:
+            output = "📋 All Business Data:\n"
+            for key, value in data.items():
+                output += f"• {key}: {value}\n"
+            return output
+        else:
+            return "📄 No business data stored yet."
+
+    except Exception as e:
+        return f"❌ Error retrieving business data: {str(e)}"
+
+
+def search_business_data(search_terms: List[str]) -> str:
+    """Search for specific business information.
+
+    Args:
+        search_terms: List of terms to search for in the business data
+
+    Returns:
+        Matching business information
+    """
+    from smallbizpal.shared.services.knowledge_base import knowledge_base_service
+
+    try:
+        results = knowledge_base_service.search_business_data(search_terms)
+
+        if results:
+            output = f"🔍 Search results for: {', '.join(search_terms)}\n"
+            for key, value in results.items():
+                output += f"• {key}: {value}\n"
+            return output
+        else:
+            return f"🔍 No results found for: {', '.join(search_terms)}"
+
+    except Exception as e:
+        return f"❌ Error searching business data: {str(e)}"

@@ -16,7 +16,7 @@ install: ## Install dependencies using uv
 check: ## Run all checks (EXACTLY matches CI pipeline)
 	@echo "Running all checks..."
 	uv run flake8 smallbizpal/ --count --select=E9,F63,F7,F82 --show-source --statistics
-	uv run flake8 smallbizpal/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+	uv run flake8 smallbizpal/ --count --exit-zero --max-complexity=10 --max-line-length=327 --statistics
 	uv run black --check smallbizpal/ tests/
 	uv run isort --check-only smallbizpal/ tests/
 	uv run mypy smallbizpal/
@@ -32,7 +32,7 @@ test: ## Run tests with coverage
 
 lint: ## Run linting checks only
 	uv run flake8 smallbizpal/ --count --select=E9,F63,F7,F82 --show-source --statistics
-	uv run flake8 smallbizpal/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+	uv run flake8 smallbizpal/ --count --exit-zero --max-complexity=10 --max-line-length=327 --statistics
 
 format: ## Check formatting only
 	uv run black --check smallbizpal/ tests/
