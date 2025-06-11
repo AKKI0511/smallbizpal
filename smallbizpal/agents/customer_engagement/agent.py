@@ -12,7 +12,26 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+from google.adk.agents import LlmAgent
 
-from .agent import customer_engagement_agent
+from smallbizpal.agents.customer_engagement.config import (
+    CUSTOMER_ENGAGEMENT_CONFIG,
+)
 
-__all__ = ["customer_engagement_agent"]
+from .tools import (
+    ask_internal_kb,
+    schedule_meeting,
+)
+
+customer_engagement_agent = LlmAgent(
+    name=CUSTOMER_ENGAGEMENT_CONFIG["name"],
+    model=CUSTOMER_ENGAGEMENT_CONFIG["model"],
+    instruction=CUSTOMER_ENGAGEMENT_CONFIG["instruction"],
+    description=CUSTOMER_ENGAGEMENT_CONFIG["description"],
+    tools=[
+        ask_internal_kb,
+        schedule_meeting,
+    ],
+)
+
+root_agent = customer_engagement_agent

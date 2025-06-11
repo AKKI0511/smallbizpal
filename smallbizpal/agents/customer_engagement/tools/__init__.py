@@ -12,7 +12,10 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+from .knowledge_base_tools import ask_internal_kb
+from .meeting_tools import schedule_meeting
 
-from .agent import customer_engagement_agent
-
-__all__ = ["customer_engagement_agent"]
+__all__ = [
+    "ask_internal_kb",
+    "schedule_meeting",
+]
