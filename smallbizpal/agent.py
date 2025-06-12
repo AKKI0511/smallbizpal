@@ -20,6 +20,7 @@ According to ADK conventions, this file must contain a 'root_agent' variable.
 
 from smallbizpal.agents import (
     business_discovery_agent,
+    customer_engagement_agent,
     marketing_generator_agent,
     orchestrator_agent,
 )
@@ -31,8 +32,8 @@ root_agent = orchestrator_agent
 root_agent.sub_agents = [
     business_discovery_agent,
     marketing_generator_agent,
+    customer_engagement_agent,
     # TODO: Add other agents as they are implemented
-    # customer_engagement_agent,
     # performance_reporting_agent
 ]
 

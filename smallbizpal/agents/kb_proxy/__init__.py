@@ -12,20 +12,6 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from .business_discovery import business_discovery_agent
-from .customer_engagement import customer_engagement_agent
-from .kb_proxy import kb_proxy_agent
-from .marketing_generator import marketing_generator_agent
-from .orchestrator import orchestrator_agent
+from .agent import kb_proxy_agent
 
-# TODO: Import other agents when they are created
-# from .performance_reporting import performance_reporting_agent
-
-__all__ = [
-    "orchestrator_agent",
-    "business_discovery_agent",
-    "marketing_generator_agent",
-    "customer_engagement_agent",
-    "kb_proxy_agent",
-    # "performance_reporting_agent"
-]
+__all__ = ["kb_proxy_agent"]

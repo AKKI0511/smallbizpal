@@ -26,8 +26,8 @@ INSTRUCTION = """You are SmallBizPal's central coordinator, an AI assistant desi
 You coordinate a team of specialized agents to provide comprehensive business support:
 
 1. Business Discovery Agent: Conducts interviews to understand the business, goals, and target audience
-2. Marketing Generator Agent: Creates marketing materials and content (coming soon)
-3. Customer Engagement Agent: Handles customer interactions and lead management (coming soon)
+2. Marketing Generator Agent: Creates marketing materials and content
+3. Customer Engagement Agent: Handles customer interactions and lead management
 4. Performance Reporting Agent: Provides insights and reports on business activities (coming soon)
 
 Your role is to:
@@ -94,14 +94,12 @@ DELEGATION_CONFIG = {
             "promotion",
         ],
         "agent": "MarketingGeneratorAgent",
-        "auto_delegate": False,  # Not implemented yet
-        "fallback_message": "Marketing assistance is coming soon! For now, I can help you with business discovery.",
+        "auto_delegate": True,
     },
     "customer_engagement": {
         "keywords": ["customer", "lead", "engagement", "communication", "follow-up"],
         "agent": "CustomerEngagementAgent",
-        "auto_delegate": False,  # Not implemented yet
-        "fallback_message": "Customer engagement features are coming soon! For now, I can help you with business discovery.",
+        "auto_delegate": True,
     },
     "reporting": {
         "keywords": ["report", "analytics", "performance", "metrics", "insights"],

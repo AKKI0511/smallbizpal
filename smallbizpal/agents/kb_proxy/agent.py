@@ -12,20 +12,20 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from .business_discovery import business_discovery_agent
-from .customer_engagement import customer_engagement_agent
-from .kb_proxy import kb_proxy_agent
-from .marketing_generator import marketing_generator_agent
-from .orchestrator import orchestrator_agent
+from google.adk.agents import LlmAgent
 
-# TODO: Import other agents when they are created
-# from .performance_reporting import performance_reporting_agent
+from smallbizpal.agents.kb_proxy.config import (
+    KB_PROXY_CONFIG,
+)
 
-__all__ = [
-    "orchestrator_agent",
-    "business_discovery_agent",
-    "marketing_generator_agent",
-    "customer_engagement_agent",
-    "kb_proxy_agent",
-    # "performance_reporting_agent"
-]
+from .tools import search_private_kb
+
+kb_proxy_agent = LlmAgent(
+    name=KB_PROXY_CONFIG["name"],
+    model=KB_PROXY_CONFIG["model"],
+    instruction=KB_PROXY_CONFIG["instruction"],
+    description=KB_PROXY_CONFIG["description"],
+    tools=[search_private_kb],
+)
+
+root_agent = kb_proxy_agent
