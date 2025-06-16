@@ -88,4 +88,10 @@ content_creation_agent = LlmAgent(
     output_schema=CONTENT_CREATION_AGENT_CONFIG["output_schema"],
     output_key=CONTENT_CREATION_AGENT_CONFIG["output_key"],
     after_agent_callback=content_storage_callback,
+    disallow_transfer_to_parent=CONTENT_CREATION_AGENT_CONFIG[
+        "disallow_transfer_to_parent"
+    ],
+    disallow_transfer_to_peers=CONTENT_CREATION_AGENT_CONFIG[
+        "disallow_transfer_to_peers"
+    ],
 )
