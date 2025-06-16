@@ -17,8 +17,7 @@ Basic tests to verify SmallBizPal project structure and imports.
 
 import pytest
 
-from smallbizpal.agent import root_agent
-from smallbizpal.agents.orchestrator.config import AGENT_NAME
+from smallbizpal.agent import AGENT_NAME, root_agent
 
 
 def test_root_agent_exists():
@@ -40,7 +39,6 @@ def test_package_imports():
         business_discovery,
         customer_engagement,
         marketing_generator,
-        orchestrator,
         performance_reporting,
     )
 

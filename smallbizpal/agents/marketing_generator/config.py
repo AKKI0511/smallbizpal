@@ -255,4 +255,6 @@ Remember: Your success is measured by how well you execute the task, optimize fo
     "input_schema": ContentCreationTask,
     "output_schema": ContentCreationOutput,
     "output_key": "content_created",
+    "disallow_transfer_to_parent": True,
+    "disallow_transfer_to_peers": True,
 }

@@ -12,23 +12,24 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+from datetime import datetime
+
 from google.adk.agents import LlmAgent
 
-from .config import AGENT_NAME, DESCRIPTION, INSTRUCTION, MODEL_NAME, TOOLS_CONFIG
-
-# Build tools list based on config (orchestrator typically has few tools)
-tools = []
-for tool_name, tool_config in TOOLS_CONFIG.items():
-    if tool_config.get("enabled", True):
-        # Import and add tools as needed
-        # tools.append(imported_tool)
-        pass
-
-orchestrator_agent = LlmAgent(
-    name=AGENT_NAME,
-    model=MODEL_NAME,
-    instruction=INSTRUCTION,
-    description=DESCRIPTION,
-    tools=tools,
-    # sub_agents will be added later from smallbizpal.agent
+from .config import (
+    PERFORMANCE_REPORTING_CONFIG,
 )
+from .tools import collect_metrics, store_report
+
+performance_reporting_agent = LlmAgent(
+    name=PERFORMANCE_REPORTING_CONFIG["name"],
+    model=PERFORMANCE_REPORTING_CONFIG["model"],
+    description=PERFORMANCE_REPORTING_CONFIG["description"],
+    instruction=PERFORMANCE_REPORTING_CONFIG["instruction"].format(
+        date=datetime.now().strftime("%Y-%m-%d")
+    ),
+    tools=[collect_metrics, store_report],
+    output_key="performance_report",
+)
+
+# root_agent = performance_reporting_agent

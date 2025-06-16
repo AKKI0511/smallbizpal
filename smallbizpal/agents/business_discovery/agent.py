@@ -15,8 +15,8 @@
 from google.adk.agents import LlmAgent
 
 from .config import AGENT_NAME, DESCRIPTION, INSTRUCTION, MODEL_NAME, TOOLS_CONFIG
-from .tools.input_tools import ask_user_input
-from .tools.storage_tools import (
+from .tools import (
+    ask_user_input,
     get_all_business_data,
     get_business_profile_status,
     search_business_data,
@@ -49,4 +49,4 @@ business_discovery_agent = LlmAgent(
     tools=tools,
 )
 
-root_agent = business_discovery_agent
+# root_agent = business_discovery_agent
