@@ -17,7 +17,7 @@
 
 # Agent Basic Settings
 AGENT_NAME = "BusinessDiscoveryAgent"
-MODEL_NAME = "gemini-1.5-flash"
+MODEL_NAME = "gemini-2.5-flash-preview-05-20"
 DESCRIPTION = "Conducts interactive business profiling and market analysis"
 
 # Agent Instructions/System Prompt

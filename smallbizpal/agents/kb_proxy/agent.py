@@ -28,4 +28,4 @@ kb_proxy_agent = LlmAgent(
     tools=[search_private_kb],
 )
 
-root_agent = kb_proxy_agent
+# root_agent = kb_proxy_agent
