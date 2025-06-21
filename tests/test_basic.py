@@ -37,7 +37,7 @@ def test_package_imports():
     from smallbizpal import agents, callbacks, config, shared
     from smallbizpal.agents import (
         business_discovery,
-        customer_engagement,
+        kb_proxy,
         marketing_generator,
         performance_reporting,
     )
