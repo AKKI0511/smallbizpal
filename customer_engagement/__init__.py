@@ -12,7 +12,4 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-
-from .agent import customer_engagement_agent
-
-__all__ = ["customer_engagement_agent"]
+from . import agent  # noqa: F401

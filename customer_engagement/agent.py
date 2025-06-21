@@ -14,7 +14,7 @@
 
 from google.adk.agents import LlmAgent
 
-from smallbizpal.agents.customer_engagement.config import (
+from .config import (
     CUSTOMER_ENGAGEMENT_CONFIG,
 )
 
@@ -23,7 +23,7 @@ from .tools import (
     schedule_meeting,
 )
 
-customer_engagement_agent = LlmAgent(
+root_agent = LlmAgent(
     name=CUSTOMER_ENGAGEMENT_CONFIG["name"],
     model=CUSTOMER_ENGAGEMENT_CONFIG["model"],
     instruction=CUSTOMER_ENGAGEMENT_CONFIG["instruction"],
@@ -33,5 +33,3 @@ customer_engagement_agent = LlmAgent(
         schedule_meeting,
     ],
 )
-
-# root_agent = customer_engagement_agent
