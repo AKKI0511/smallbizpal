@@ -16,6 +16,8 @@ from collections import Counter
 from datetime import UTC, date, datetime
 from typing import Any, Dict, Optional
 
+from google.adk.tools import ToolContext
+
 from smallbizpal.shared.services import knowledge_base_service
 
 
@@ -41,10 +43,13 @@ def date_from_iso(timestamp_str: str) -> Optional[date]:
         return None
 
 
-def collect_metrics(run_date: Optional[str] = None) -> Dict[str, Any]:  # noqa: C901
+def collect_metrics(  # noqa: C901
+    tool_context: ToolContext, run_date: Optional[str] = None  # noqa: C901
+) -> Dict[str, Any]:  # noqa: C901
     """Collect performance metrics from the knowledge base for a specific date.
 
     Args:
+        tool_context: The context of the tool.
         run_date: Date to collect metrics for (YYYY-MM-DD format).
                  Defaults to today if not provided.
 
@@ -52,6 +57,8 @@ def collect_metrics(run_date: Optional[str] = None) -> Dict[str, Any]:  # noqa: 
         Dictionary containing collected metrics data
     """
     try:
+        user_id = tool_context._invocation_context.session.user_id
+
         # Parse target date
         if run_date:
             try:
@@ -77,7 +84,7 @@ def collect_metrics(run_date: Optional[str] = None) -> Dict[str, Any]:  # noqa: 
         }
 
         # Collect customer interactions
-        interactions = knowledge_base_service.get_customer_interactions()
+        interactions = knowledge_base_service.get_customer_interactions(user_id)
 
         # Filter interactions by date and categorize
         daily_interactions = []
@@ -108,12 +115,12 @@ def collect_metrics(run_date: Optional[str] = None) -> Dict[str, Any]:  # noqa: 
                     if question_text:
                         questions.append(question_text)
 
-        # Also check leads.json file for additional lead data
+        # Also check user-specific leads.json file for additional lead data
         try:
             import json
             from pathlib import Path
 
-            leads_file = Path("data/leads/leads.json")
+            leads_file = Path("data") / user_id / "leads" / "leads.json"
             if leads_file.exists():
                 with open(leads_file, "r") as f:
                     leads_data = json.load(f)
@@ -138,7 +145,7 @@ def collect_metrics(run_date: Optional[str] = None) -> Dict[str, Any]:  # noqa: 
             pass  # Continue without leads.json data if there's an issue
 
         # Collect marketing assets
-        marketing_assets = knowledge_base_service.get_marketing_assets()
+        marketing_assets = knowledge_base_service.get_marketing_assets(user_id)
         daily_assets = []
 
         for asset in marketing_assets:
@@ -187,5 +194,5 @@ def collect_metrics(run_date: Optional[str] = None) -> Dict[str, Any]:  # noqa: 
         return {
             "error": f"Failed to collect metrics: {str(e)}",
             "success": False,
-            "date": run_date or datetime.utcnow().date().strftime("%Y-%m-%d"),
+            "date": run_date or datetime.now(UTC).date().strftime("%Y-%m-%d"),
         }

@@ -16,9 +16,11 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+from google.adk.tools import ToolContext
+
 
 def schedule_meeting(
-    name: str, email: str, topic: str, preferred_time: str = ""
+    name: str, email: str, topic: str, tool_context: ToolContext, preferred_time: str = ""
 ) -> str:
     """
     Schedules a meeting with the business owner for a potential customer.
@@ -27,14 +29,17 @@ def schedule_meeting(
         name: The name of the potential customer.
         email: The email address of the potential customer.
         topic: The topic or reason for the meeting.
+        tool_context: The context of the tool.
         preferred_time: Optional preferred time for the meeting.
 
     Returns:
         A confirmation message to be shown to the user.
     """
     try:
-        # Create leads directory if it doesn't exist
-        leads_dir = Path("data/leads")
+        user_id = tool_context._invocation_context.session.user_id
+        
+        # Create user-specific leads directory if it doesn't exist
+        leads_dir = Path("data") / user_id / "leads"
         leads_dir.mkdir(parents=True, exist_ok=True)
 
         # Create lead record
@@ -48,7 +53,7 @@ def schedule_meeting(
             "source": "customer_engagement_agent",
         }
 
-        # Save to leads file
+        # Save to user-specific leads file
         leads_file = leads_dir / "leads.json"
         leads = []
 
@@ -77,7 +82,7 @@ def schedule_meeting(
                 "timestamp": datetime.now().isoformat(),
                 "status": "scheduled",
             }
-            knowledge_base_service.store_customer_interaction(interaction_data)
+            knowledge_base_service.store_customer_interaction(user_id, interaction_data)
         except Exception:
             pass  # Don't fail if KB service is unavailable
 

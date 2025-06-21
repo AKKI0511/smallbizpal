@@ -1,0 +1,38 @@
+# Exclude everything by default
+*
+
+# Include only what we need
+!requirements.txt
+!main.py
+!smallbizpal/
+!customer_engagement/
+
+# Exclude cache and temporary files
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.Python
+**/*.so
+**/.pytest_cache/
+**/.coverage
+**/.tox/
+**/.cache/
+**/.mypy_cache/
+**/.DS_Store
+**/*.log
+
+# Exclude development and testing files
+tests/
+docs/
+evaluation/
+guides/
+scripts/
+data/
+*.md
+LICENSE
+Makefile
+pyproject.toml
+uv.lock
+.git/
+.gitignore 

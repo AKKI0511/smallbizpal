@@ -1,0 +1,6 @@
+google-adk
+litellm
+pydantic
+pydantic-settings
+python-dotenv
+uvicorn

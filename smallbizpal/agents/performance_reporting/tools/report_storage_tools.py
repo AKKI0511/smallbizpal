@@ -16,18 +16,25 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict
 
+from google.adk.tools import ToolContext
 
-def store_report(markdown_content: str, report_date: str) -> Dict[str, Any]:
+
+def store_report(
+    markdown_content: str, report_date: str, tool_context: ToolContext
+) -> Dict[str, Any]:
     """Store a markdown report in the reports directory.
 
     Args:
         markdown_content: The generated markdown report content
         report_date: Date of the report in YYYY-MM-DD format
+        tool_context: The context of the tool.
 
     Returns:
         Dictionary with storage status and file path information
     """
     try:
+        user_id = tool_context._invocation_context.session.user_id
+
         # Validate inputs
         if not markdown_content or not markdown_content.strip():
             return {
@@ -53,8 +60,8 @@ def store_report(markdown_content: str, report_date: str) -> Dict[str, Any]:
                 "file_path": None,
             }
 
-        # Create reports directory if it doesn't exist
-        reports_dir = Path("data/reports")
+        # Create user-specific reports directory if it doesn't exist
+        reports_dir = Path("data") / user_id / "reports"
         reports_dir.mkdir(parents=True, exist_ok=True)
 
         # Generate filename
