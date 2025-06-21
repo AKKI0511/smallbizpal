@@ -180,3 +180,6 @@ guides/
 # Project specific
 data/
 evaluation/
+
+# Database
+*.db
