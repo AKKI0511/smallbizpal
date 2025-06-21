@@ -14,11 +14,16 @@
 
 from typing import Any, Dict
 
+from google.adk.tools import ToolContext
+
 from smallbizpal.shared.services import knowledge_base_service
 
 
-def retrieve_business_profile() -> Dict[str, Any]:
+def retrieve_business_profile(tool_context: ToolContext) -> Dict[str, Any]:
     """Retrieve the current business profile for marketing content generation.
+
+    Args:
+        tool_context: The context of the tool.
 
     Returns:
         Dictionary containing business profile data including:
@@ -38,8 +43,10 @@ def retrieve_business_profile() -> Dict[str, Any]:
         Exception: If no business profile is found
     """
     try:
+        user_id = tool_context._invocation_context.session.user_id
+
         # Retrieve business profile from knowledge base
-        business_profile = knowledge_base_service.get_business_profile()
+        business_profile = knowledge_base_service.get_business_profile(user_id)
 
         if not business_profile:
             return {

@@ -16,12 +16,15 @@ import uuid
 from datetime import UTC, datetime
 from typing import Any, Dict, Optional
 
+from google.adk.tools import ToolContext
+
 from smallbizpal.shared.services import knowledge_base_service
 
 
 def store_marketing_asset(
     content: str,
     content_type: str,
+    tool_context: ToolContext,
     platform: str = "universal",
     metadata: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
@@ -30,6 +33,7 @@ def store_marketing_asset(
     Args:
         content: The generated marketing content (text)
         content_type: Type of content (slogan, social_post, ad_copy, blog_outline)
+        tool_context: The context of the tool.
         platform: Target platform (instagram, linkedin, facebook, twitter, universal)
         metadata: Additional metadata including hashtags, tone, target_audience, etc.
 
@@ -37,6 +41,8 @@ def store_marketing_asset(
         Dictionary with storage status and asset information
     """
     try:
+        user_id = tool_context._invocation_context.session.user_id
+
         if not content or not content.strip():
             return {
                 "success": False,
@@ -85,7 +91,7 @@ def store_marketing_asset(
             ]
 
         # Store in knowledge base
-        knowledge_base_service.store_marketing_asset(asset_data)
+        knowledge_base_service.store_marketing_asset(user_id, asset_data)
 
         return {
             "success": True,
@@ -104,6 +110,7 @@ def store_marketing_asset(
 
 
 def list_marketing_assets(
+    tool_context: ToolContext,
     content_type: Optional[str] = None,
     platform: Optional[str] = None,
     include_metadata: bool = True,
@@ -111,6 +118,7 @@ def list_marketing_assets(
     """Retrieve marketing assets from the knowledge base.
 
     Args:
+        tool_context: The context of the tool.
         content_type: Filter by content type (optional)
         platform: Filter by platform (optional)
         include_metadata: Whether to include detailed metadata
@@ -119,8 +127,10 @@ def list_marketing_assets(
         Dictionary with list of matching marketing assets
     """
     try:
+        user_id = tool_context._invocation_context.session.user_id
+
         # Get all marketing assets from knowledge base
-        all_assets = knowledge_base_service.get_marketing_assets()
+        all_assets = knowledge_base_service.get_marketing_assets(user_id)
 
         if not all_assets:
             return {
@@ -246,17 +256,21 @@ def _validate_content_for_platform(
     }
 
 
-def save_content_to_kb(platform: str, content: str, asset_type: str) -> str:
+def save_content_to_kb(
+    platform: str, content: str, asset_type: str, tool_context: ToolContext
+) -> str:
     """Saves a piece of marketing content to the shared knowledge base.
 
     Args:
         platform: The platform the content is intended for (e.g., 'Twitter', 'LinkedIn').
         content: The generated marketing content.
         asset_type: The type of marketing asset (e.g., 'Social Post', 'Email Body').
+        tool_context: The context of the tool.
 
     Returns:
         A message indicating the content has been saved successfully.
     """
+    user_id = tool_context._invocation_context.session.user_id
 
     asset_data = {
         "platform": platform,
@@ -265,6 +279,6 @@ def save_content_to_kb(platform: str, content: str, asset_type: str) -> str:
         "created_at": datetime.now(UTC).isoformat(),
     }
 
-    knowledge_base_service.store_marketing_asset(asset_data)
+    knowledge_base_service.store_marketing_asset(user_id, asset_data)
 
     return f"Content for {platform} of type '{asset_type}' saved successfully to the knowledge base."

@@ -13,10 +13,13 @@
 #   limitations under the License.
 
 import json
-from pathlib import Path
+
+from google.adk.tools import ToolContext
+
+from smallbizpal.shared.services import knowledge_base_service
 
 
-def search_private_kb(query: str) -> str:
+def search_private_kb(query: str, tool_context: ToolContext) -> str:
     """
     Searches the private knowledge base for information relevant to the query.
 
@@ -25,27 +28,28 @@ def search_private_kb(query: str) -> str:
 
     Args:
         query: The search query from the customer engagement agent
+        tool_context: The context of the tool.
 
     Returns:
         Complete business profile data from the knowledge base
     """
     try:
-        # Load the private knowledge base
-        kb_path = Path("data/knowledge_base.json")
-        if not kb_path.exists():
-            return "Knowledge base not found. Please ensure business profile is set up."
+        user_id = tool_context._invocation_context.session.user_id
 
-        with open(kb_path, "r") as f:
-            kb_data = json.load(f)
-
-        # Extract business profile data
-        business_profile = kb_data.get("business_profile", {}).get("data", {})
+        # Get business profile from knowledge base service
+        business_profile = knowledge_base_service.get_business_profile(user_id)
 
         if not business_profile:
             return "No business information available. Please complete the business profile setup."
 
+        # Get all business data
+        business_data = business_profile.get_all_data()
+
+        if not business_data:
+            return "No business information available. Please complete the business profile setup."
+
         # For MVP: Simply return the entire business profile as JSON string
-        return json.dumps(business_profile, indent=2)
+        return json.dumps(business_data, indent=2)
 
     except Exception as e:
         return f"Error accessing knowledge base: {str(e)}"
