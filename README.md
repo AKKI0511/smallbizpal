@@ -1,246 +1,162 @@
-# SmallBizPal 🚀
+# SmallBizPal: Your AI-Powered Team for Business Growth
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue)](https://www.python.org/downloads/)
 [![ADK](https://img.shields.io/badge/Built%20with-Google%20ADK-4285F4)](https://google.github.io/adk-docs/)
 
-> **AI-Powered Small Business Assistant** - A sophisticated multi-agent system built with Google ADK to help small businesses thrive through intelligent automation.
+> **An AI-powered assistant that acts as a digital team for small businesses, automating marketing, customer service, and analytics to fuel growth.**
 
-## 🎯 Overview
+<br/>
 
-SmallBizPal is an innovative AI-powered assistant designed specifically for small businesses. Built using Google's Agent Development Kit (ADK), it employs a multi-agent architecture to provide comprehensive business support across marketing, customer engagement, and performance analytics.
+```mermaid
+%%{init: {'theme':'dark', 'themeVariables': {'primaryColor':'#1f2937','primaryTextColor':'#f9fafb','primaryBorderColor':'#6b7280','lineColor':'#9ca3af','edgeLabelBackground':'#374151','tertiaryColor':'#374151'}}}%%
+graph TD
+    subgraph AdminApp ["🔐 Admin App (smallbizpal)"]
+        direction TB
+        BusinessOwner["👤 Business Owner"] --> AdminUI["📊 Admin UI"]
+        AdminUI --> Orchestrator["🎯 Orchestrator Agent"]
+        
+        Orchestrator --> BusinessDiscovery["🔍 Business Discovery<br/>Agent"]
+        Orchestrator --> MarketingGen["📈 Marketing Generator<br/>Agent"]
+        Orchestrator --> KBProxy["🛡️ Knowledge Base Proxy<br/>Agent"]
+        Orchestrator --> PerformanceReport["📊 Performance Reporting<br/>Agent"]
+        
+        PerformanceReport -->|"read/write"| PrivateData
+        KBProxy -->|"read"| PrivateData
+        MarketingGen -->|"read/write"| PrivateData
+        BusinessDiscovery -->|"manage/update"| PrivateData[("💾 Private Business Data")]
+    end
 
-## ✨ Features
-
-### 🔍 Business Discovery Agent
-- Interactive business profiling through intelligent questioning
-- Target audience analysis and market positioning
-- Competitive landscape assessment
-- Brand voice and messaging development
-
-### 📈 Marketing Asset Generator
-- Automated creation of marketing materials (slogans, ad copy, social media content)
-- Content optimization for different platforms
-- Brand-consistent messaging across all materials
-- SEO-optimized content generation
-
-### 💬 Customer Engagement Agent
-- Intelligent customer interaction handling
-- Lead qualification and scoring
-- Automated follow-up sequences
-- Multi-channel communication support
-
-### 📊 Performance Reporting Agent
-- Real-time business metrics tracking
-- Automated report generation
-- ROI analysis and insights
-- Growth trend identification
-
-## 🏗️ Architecture
-
-SmallBizPal employs a **multi-agent orchestration pattern** where:
-
-- **Orchestrator Agent**: Coordinates all business assistance tasks and routes requests to specialized agents
-- **Specialized Agents**: Each handles a specific domain (discovery, marketing, customer engagement, reporting)
-- **Shared Services**: Common utilities for knowledge management, storage, and cross-agent communication
-
+    subgraph PublicApp ["🌐 Public App"]
+        direction TB
+        WebsiteVisitor["👥 Website Visitor"] --> ChatWidget["💬 Chat Widget"]
+        ChatWidget --> CustomerAgent["🤖 Customer Engagement<br/>Agent"]
+        
+        CustomerAgent -->|"write"| LeadsDB[("🎯 Leads Data")]
+    end
+    
+    %% Cross-lane A2A communication
+    CustomerAgent -.->|"🔗 A2A"| KBProxy
+    PerformanceReport -->|"analyze"| LeadsDB
+    
+    %% Dark Theme Styling
+    classDef adminStyle fill:#1e3a8a,stroke:#3b82f6,stroke-width:3px,color:#e0e7ff
+    classDef publicStyle fill:#14532d,stroke:#22c55e,stroke-width:3px,color:#dcfce7
+    classDef agentStyle fill:#7c2d12,stroke:#f97316,stroke-width:3px,color:#fed7aa
+    classDef dataStyle fill:#7f1d1d,stroke:#ef4444,stroke-width:3px,color:#fecaca
+    classDef userStyle fill:#581c87,stroke:#a855f7,stroke-width:3px,color:#e9d5ff
+    classDef commStyle fill:#374151,stroke:#6b7280,stroke-width:2px,color:#d1d5db
+    
+    class AdminApp adminStyle
+    class PublicApp publicStyle
+    class Orchestrator,BusinessDiscovery,MarketingGen,KBProxy,PerformanceReport,CustomerAgent agentStyle
+    class PrivateData,LeadsDB dataStyle
+    class BusinessOwner,WebsiteVisitor userStyle
+    class Communication,A2ANote commStyle
 ```
-SmallBizPal
-├── Orchestrator Agent (Root)
-├── Business Discovery Agent
-├── Marketing Generator Agent
-├── Customer Engagement Agent
-└── Performance Reporting Agent
-```
+
+---
+
+## 🏛️ Architecture Overview
+
+SmallBizPal is designed as two distinct applications to ensure a strong security posture:
+
+1.  **Admin Application**: A local, private workspace where the business owner interacts with the core agent team (`Orchestrator`, `Business Discovery`, `Marketing`, `Reporting`) to manage the business and its confidential data.
+2.  **Public Application**: A separate, public-facing agent (`Customer Engagement`) that is designed for deployment. It has access only to a safe, sanitized subset of the business knowledge, ensuring no private data is ever exposed.
+
+For development, these applications run in a single process, and the `Customer Engagement` agent communicates with the internal system via an `AgentTool`. This wrapper can be seamlessly replaced with a secure A2A (Agent-to-Agent) protocol call for production deployment, with no changes to the agent's logic.
+
+---
+
+SmallBizPal is an innovative AI-powered assistant designed for small businesses. Leveraging a sophisticated multi-agent system built with the Google Agent Development Kit (ADK), it automates and enhances core business functions including marketing, customer service, and performance analytics. SmallBizPal acts as a digital team, empowering entrepreneurs to focus on growth while their AI handles the routine tasks.
+
+<p align="center">
+  🎥 <b><a href="#">Watch the Demo Video</a></b>
+  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  📝 <b><a href="#">Read the Blog Post</a></b>
+  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  🚀 <b><a href="#">Try the Live Demo</a></b>
+</p>
+_(Note: Links to be updated with final URLs.)_
+
+
+## ✨ Key Features
+
+- **🤖 Automated Business Profiling**: Interactively builds a comprehensive business profile by asking intelligent questions.
+- **🎨 Intelligent Marketing Asset Generation**: Automatically creates high-quality slogans, ad copy, and social media content tailored to your brand.
+- **💬 24/7 Customer Engagement**: A dedicated, public-facing agent handles customer inquiries, qualifies leads, and schedules meetings around the clock.
+- **📊 Automated Performance Reporting**: Tracks key business metrics and generates insightful, easy-to-understand reports.
+- **⚙️ Coordinated Dual-App Workflows**: A central coordinator agent intelligently manages tasks across all specialized agents while maintaining strict security boundaries between admin and public applications.
+- **🔒 Secure by Design**: Employs a two-app structure with KB-Proxy security layer to strictly separate private business data from public-facing interactions.
+
+## 🛠️ Tech Stack
+
+SmallBizPal is built with a modern, scalable tech stack:
+
+| **Technology** | **Purpose** |
+| :--- | :--- |
+| **Python** | Core application language |
+| **Google ADK** | Foundation for the multi-agent system |
+| **Google Gemini** | Powering the intelligence of each agent |
+| **Google Cloud Run** | Scalable, serverless deployment |
+| **Docker** | Containerization for consistent environments |
+| **uv** | Lightning-fast dependency management |
+
 
 ## 🚀 Quick Start
+
+Get your own SmallBizPal instance running locally in just a few minutes.
 
 ### Prerequisites
 
 - Python 3.11 or higher
 - Google API Key for Gemini models ([Get one here](https://aistudio.google.com/app/apikey))
+- `uv` installed ([Installation guide](https://docs.astral.sh/uv/getting-started/installation/))
 
-### Installation
+### Installation & Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/AKKI0511/smallbizpal.git
-   cd smallbizpal
-   ```
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/AKKI0511/smallbizpal.git
+    cd smallbizpal
+    ```
 
-2. **Set up dependencies**
-   ```bash
-   # Install uv: https://docs.astral.sh/uv/getting-started/installation/
-   # Create virtual environment
-   uv venv
+2.  **Set up the environment:**
+    ```bash
+    # Create a virtual environment
+    uv venv
 
-   # Install dependencies
-   uv sync  # or make install
+    # Install dependencies
+    uv sync
+    ```
 
-   # With dev dependencies (optional)
-   uv sync --group dev
-   ```
+3.  **Configure your API Key:**
+    ```bash
+    # Copy the environment template
+    cp .env.example .env
 
-3. **Configure environment**
-   ```bash
-   # Copy environment template
-   cp .env.example .env
-   
-   # Edit .env and add your Google API key
-   # GOOGLE_API_KEY=your_gemini_api_key_here
-   ```
+    # Edit .env and add your Google API key
+    # GOOGLE_API_KEY="your_gemini_api_key_here"
+    ```
 
-4. **Run SmallBizPal**
-   ```bash
-   # Start the ADK development UI
-   adk web
-   
-   # Or run directly in Python
-   python -c "from smallbizpal.agent import root_agent; print(root_agent)"
-   ```
-
-## 🛠️ Development
-
-### Project Structure
-
-```
-smallbizpal/
-├── smallbizpal/               # Main ADK package
-│   ├── agent.py              # ADK entry point (contains root_agent)
-│   ├── agents/               # Multi-agent system
-│   │   ├── orchestrator/     # Orchestrator agent
-│   │   ├── business_discovery/ # Business discovery agent
-│   │   ├── marketing_generator/ # Marketing asset generator
-│   │   ├── customer_engagement/ # Customer engagement agent
-│   │   └── performance_reporting/ # Performance reporting agent
-│   ├── shared/               # Shared utilities and services
-│   ├── config/               # Global configuration
-│   └── callbacks/            # ADK callbacks and middleware
-├── tests/                    # Test suite
-├── evaluation/               # ADK evaluation datasets
-├── docs/                     # Documentation
-└── scripts/                  # Utility scripts
-```
-
-### Development Workflow
-
-**🚀 Two Essential Commands:**
-
-```bash
-# 1. Check everything (EXACTLY matches CI)
-make check
-
-# 2. Fix formatting and linting issues
-make fix
-```
-
-**📋 Complete Workflow:**
-
-```bash
-# Make your code changes...
-
-# Fix any formatting issues automatically
-make fix
-
-# Check everything (must pass before pushing)
-make check
-
-# If check passes, you can safely push to GitHub
-git add .
-git commit -m "Your changes"
-git push
-```
-
-**🔧 Optional: Set up pre-commit hooks for automatic checking:**
-
-```bash
-# Install pre-commit hooks
-uv run pre-commit install
-
-# Now every commit will automatically run checks
-git commit -m "Your changes"  # Automatically runs all checks
-```
-
-**📚 Other useful commands:**
-
-```bash
-make help          # Show all available commands
-make test          # Run tests only
-make coverage      # Generate detailed coverage report
-make clean         # Clean up cache files
-```
-### Running Tests
-```bash
-# Run all tests
-pytest
-# Run with coverage
-pytest --cov=smallbizpal --cov-report=html
-# Run specific test
-pytest tests/unit/test_orchestrator/
-```
-
-### ADK Evaluation
-
-```bash
-# Run evaluation on specific agent
-adk eval smallbizpal/ evaluation/datasets/business_discovery_accuracy.evalset.json
-
-# Run all evaluations
-python scripts/run_evaluation.py
-```
-
-## 🎮 Usage Examples
-
-### Basic Business Consultation
-
-```python
-from smallbizpal.agent import root_agent
-
-# Simple interaction
-response = root_agent.run("I need help creating a marketing plan for my bakery")
-print(response.content)
-```
-
-### Using ADK Web UI
-
-1. Start the development UI: `adk web`
-2. Navigate to `http://localhost:8000`
-3. Interact with SmallBizPal through the web interface
-4. View agent interactions, tool calls, and performance metrics
+4.  **Launch the Development UI:**
+    ```bash
+    adk web
+    ```
+    Now, open your browser to `http://localhost:8000` to start interacting with SmallBizPal!
 
 ## 📚 Documentation
 
-- [Architecture Overview](docs/architecture.md)
-- [Agent Specifications](docs/agent_specifications.md)
-- [API Documentation](docs/api_documentation.md)
-- [Deployment Guide](docs/deployment_guide.md)
+For a deeper dive into the project's architecture, agent design, and deployment strategy, please refer to our detailed documentation:
+
+- **[Architecture Deep Dive](docs/ARCHITECTURE.md)**: Understand the multi-agent design, data flow, and security model.
+- **[Installation Guide](docs/INSTALLATION.md)**: Complete setup instructions for local development and cloud deployment.
+- **[Usage Guide & Demo Scenarios](docs/USAGE_GUIDE.md)**: Step-by-step walkthrough for both business owners and customers.
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions from the community! Please see our [Contributing Guidelines](CONTRIBUTING.md) to get started.
 
 ## 📄 License
 
-This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Built with [Google Agent Development Kit (ADK)](https://google.github.io/adk-docs/)
-- Powered by [Gemini 2.0 Flash](https://ai.google.dev/models/gemini)
-- Inspired by the needs of small business owners everywhere
-
-## 📞 Support
-
-- 📧 Email: [akkijoshi0511@gmail.com](mailto:akkijoshi0511@gmail.com)
-- 💬 Discussions: [GitHub Discussions](https://github.com/AKKI0511/smallbizpal/discussions)
-- 🐛 Issues: [GitHub Issues](https://github.com/AKKI0511/smallbizpal/issues)
-
----
-
-**Happy Business Building!** 🎉
+This project is licensed under the Apache 2.0 License. See the [LICENSE](LICENSE) file for details.

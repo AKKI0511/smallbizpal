@@ -1,0 +1,41 @@
+%%{init: {'theme':'dark', 'themeVariables': {'primaryColor':'#1f2937','primaryTextColor':'#f9fafb','primaryBorderColor':'#6b7280','lineColor':'#9ca3af','edgeLabelBackground':'#374151','tertiaryColor':'#374151'}}}%%
+graph TD
+    subgraph AdminApp ["🔐 Admin App (smallbizpal)"]
+        direction TB
+        BusinessOwner["👤 Business Owner"] --> AdminUI["📊 Admin UI"]
+        AdminUI --> Orchestrator["🎯 Orchestrator Agent"]
+        
+        Orchestrator --> BusinessDiscovery["🔍 Business Discovery<br/>Agent"]
+        Orchestrator --> MarketingGen["📈 Marketing Generator<br/>Agent"]
+        Orchestrator --> KBProxy["🛡️ Knowledge Base Proxy<br/>Agent"]
+        Orchestrator --> PerformanceReport["📊 Performance Reporting<br/>Agent"]
+        
+        PerformanceReport -->|"read/write"| PrivateData
+        KBProxy -->|"read"| PrivateData
+        MarketingGen -->|"read/write"| PrivateData
+        BusinessDiscovery -->|"manage/update"| PrivateData[("💾 Private Business Data")]
+    end
+
+    subgraph PublicApp ["🌐 Public App"]
+        direction TB
+        WebsiteVisitor["👥 Website Visitor"] --> ChatWidget["💬 Chat Widget"]
+        ChatWidget --> CustomerAgent["🤖 Customer Engagement<br/>Agent"]
+        
+        CustomerAgent -->|"write"| LeadsDB[("🎯 Leads Data")]
+    end
+    
+    %% Cross-lane A2A communication
+    CustomerAgent -.->|"🔗 A2A"| KBProxy
+    PerformanceReport -->|"analyze"| LeadsDB
+    
+    %% Dark Theme Styling
+    classDef adminStyle fill:#1e3a8a,stroke:#3b82f6,stroke-width:3px,color:#e0e7ff
+    classDef publicStyle fill:#14532d,stroke:#22c55e,stroke-width:3px,color:#dcfce7
+    classDef agentStyle fill:#7c2d12,stroke:#f97316,stroke-width:3px,color:#fed7aa
+    classDef dataStyle fill:#7f1d1d,stroke:#ef4444,stroke-width:3px,color:#fecaca
+    classDef userStyle fill:#581c87,stroke:#a855f7,stroke-width:3px,color:#e9d5ff
+    class AdminApp adminStyle
+    class PublicApp publicStyle
+    class Orchestrator,BusinessDiscovery,MarketingGen,KBProxy,PerformanceReport,CustomerAgent agentStyle
+    class PrivateData,LeadsDB dataStyle
+    class BusinessOwner,WebsiteVisitor userStyle
