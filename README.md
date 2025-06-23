@@ -73,11 +73,8 @@ SmallBizPal is an innovative AI-powered assistant designed for small businesses.
 <p align="center">
   🎥 <b><a href="#">Watch the Demo Video</a></b>
   &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  📝 <b><a href="#">Read the Blog Post</a></b>
-  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  🚀 <b><a href="#">Try the Live Demo</a></b>
+  🚀 <b><a href="https://smallbizpal.vercel.app/">Try the Live Demo</a></b>
 </p>
-_(Note: Links to be updated with final URLs.)_
 
 
 ## ✨ Key Features
