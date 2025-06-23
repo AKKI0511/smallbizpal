@@ -71,7 +71,7 @@ For development, these applications run in a single process, and the `Customer E
 SmallBizPal is an innovative AI-powered assistant designed for small businesses. Leveraging a sophisticated multi-agent system built with the Google Agent Development Kit (ADK), it automates and enhances core business functions including marketing, customer service, and performance analytics. SmallBizPal acts as a digital team, empowering entrepreneurs to focus on growth while their AI handles the routine tasks.
 
 <p align="center">
-  🎥 <b><a href="#">Watch the Demo Video</a></b>
+  🎥 <b><a href="https://youtu.be/thGJiX9AYbk">Watch the Demo Video</a></b>
   &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   🚀 <b><a href="https://smallbizpal.vercel.app/">Try the Live Demo</a></b>
 </p>
