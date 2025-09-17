@@ -16,10 +16,10 @@
 # Global model configurations for SmallBizPal
 
 # Available models in the system
-AVAILABLE_MODELS = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash"]
+AVAILABLE_MODELS = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"]
 
 # Default model for the application
-DEFAULT_MODEL = "gemini-1.5-flash"
+DEFAULT_MODEL = "gemini-2.5-flash"
 
 # Global model parameter configurations
 MODEL_CONFIGS = {

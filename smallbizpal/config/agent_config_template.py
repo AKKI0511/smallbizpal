@@ -25,7 +25,7 @@ This template provides a standardized structure for agent configuration.
 
 # Agent identification
 AGENT_NAME = "YourAgentName"  # Should match the class name
-MODEL_NAME = "gemini-1.5-flash"  # or "gemini-1.5-pro" for more complex tasks
+MODEL_NAME = "gemini-2.5-flash"  # or "gemini-2.5-pro" for more complex tasks
 DESCRIPTION = "Brief description of what this agent does"
 
 # Agent Instructions/System Prompt

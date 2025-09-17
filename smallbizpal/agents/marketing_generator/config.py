@@ -20,7 +20,7 @@ from pydantic import BaseModel, Field
 
 # Agent Basic Settings
 AGENT_NAME = "MarketingGenerator"
-MODEL_NAME = "gemini-2.5-flash-preview-05-20"
+MODEL_NAME = "gemini-2.5-flash"
 DESCRIPTION = "A powerful agent that analyzes your business and generates production-ready marketing content."
 
 # Orchestration Agents Configuration
