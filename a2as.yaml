@@ -1,0 +1,600 @@
+manifest:
+  version: "0.1.3"
+  schema: https://a2as.org/cert/schema
+  subject:
+    name: akki0511/smallbizpal
+    source: https://github.com/akki0511/smallbizpal
+    branch: main
+    commit: "da6f42ea"
+    scope: [customer_engagement/agent.py, customer_engagement/config.py, customer_engagement/tools/__init__.py, customer_engagement/tools/knowledge_base_tools.py,
+      smallbizpal/agent.py, smallbizpal/agents/__init__.py, smallbizpal/agents/business_discovery/__init__.py, smallbizpal/agents/business_discovery/agent.py,
+      smallbizpal/agents/business_discovery/config.py, smallbizpal/agents/business_discovery/tools/__init__.py, smallbizpal/agents/kb_proxy/__init__.py,
+      smallbizpal/agents/kb_proxy/agent.py, smallbizpal/agents/kb_proxy/config.py, smallbizpal/agents/kb_proxy/tools/__init__.py,
+      smallbizpal/agents/marketing_generator/__init__.py, smallbizpal/agents/marketing_generator/agent.py, smallbizpal/agents/marketing_generator/config.py,
+      smallbizpal/agents/marketing_generator/sub_agents/__init__.py, smallbizpal/agents/marketing_generator/sub_agents/content_creation_agent/__init__.py,
+      smallbizpal/agents/marketing_generator/sub_agents/content_creation_agent/agent.py, smallbizpal/agents/marketing_generator/tools/__init__.py,
+      smallbizpal/agents/performance_reporting/__init__.py, smallbizpal/agents/performance_reporting/agent.py, smallbizpal/agents/performance_reporting/config.py,
+      smallbizpal/agents/performance_reporting/tools/__init__.py, smallbizpal/config/agent_config_template.py, smallbizpal/config/models.py,
+      smallbizpal/scripts/validate_config.py, smallbizpal/shared/services/__init__.py]
+  issued:
+    by: A2AS.org
+    at: '2026-02-11T16:54:44Z'
+    url: https://a2as.org/certified/agents/akki0511/smallbizpal
+  signatures:
+    digest: sha256:Mb7E7Uiagy8G_LR1U1CWiETvAmiI5gMkZQulpXnPmkU
+    key: ed25519:gyNU8wu8jpEgkM62HqECrF9t1sLH1DwPkbTxUqf0no8
+    sig: ed25519:QyVTaIreIndoPPkCtgUr6-x8RMGy0sZHH4p1ZWAT59YSB_rgO1JBymrK3WbqlWguNjqU9vr40WCfGTV_j1V8Ag
+
+agents:
+  business_discovery_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    params:
+      name: CustomerEngagementAgent
+      instruction: ['You are SmallBizPal''s central coordinator, an AI assistant designed to help small businesses succeed.',
+        'You coordinate a team of specialized agents to provide comprehensive business support:', '1. Business Discovery Agent:
+          Conducts interviews to understand the business, goals, and target audience', '2. Marketing Generator Agent: Creates
+          marketing materials and content', '3. Customer Engagement Agent: Handles customer interactions and lead management',
+        '4. Performance Reporting Agent: Provides insights and reports on business activities', 'Your role is to:', '- Understand
+          user requests and determine the best approach', '- Route tasks to the most appropriate specialized agent', '- Coordinate
+          between agents when complex tasks require multiple specialties', '- Provide direct assistance for general business
+          questions', '- Ensure a smooth and professional user experience', 'When a user asks for help:', 1. Analyze their
+          request to understand the core need, 2. Determine which specialized agent can best assist them, 3. Delegate to that
+          agent or handle directly if it's a general inquiry, '4. For business profiling and discovery, use the Business Discovery
+          Agent', '5. Always be helpful, professional, and focused on driving business success', 'Remember: You are the user''s
+          primary point of contact, so maintain a welcoming and supportive tone.']
+      description: AI-powered customer engagement agent that helps convert website visitors and social media interactions
+        into qualified leads through helpful conversations and meeting scheduling.
+  content_creation_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    params:
+      name: CONTENT_CREATION_AGENT_CONFIG[name]
+      description: CONTENT_CREATION_AGENT_CONFIG[description]
+      instruction: CONTENT_CREATION_AGENT_CONFIG[instruction]
+      input_schema: CONTENT_CREATION_AGENT_CONFIG[input_schema]
+      output_schema: CONTENT_CREATION_AGENT_CONFIG[output_schema]
+      output_key: CONTENT_CREATION_AGENT_CONFIG[output_key]
+      disallow_transfer_to_parent: CONTENT_CREATION_AGENT_CONFIG[disallow_transfer_to_parent]
+      disallow_transfer_to_peers: CONTENT_CREATION_AGENT_CONFIG[disallow_transfer_to_peers]
+  kb_proxy_agent:
+    type: instance
+    models: [MODEL_NAME]
+    tools: [search_private_kb]
+    params:
+      name: KB_PROXY_CONFIG[name]
+      instruction: KB_PROXY_CONFIG[instruction]
+      description: KB_PROXY_CONFIG[description]
+  marketing_generator_agent:
+    type: instance
+    models: [MODEL_NAME]
+    tools: [retrieve_business_profile, agent_tool]
+    params:
+      name: MARKETING_GENERATOR_CONFIG[name]
+      description: MARKETING_GENERATOR_CONFIG[description]
+      instruction: MARKETING_GENERATOR_CONFIG[instruction]
+      planner: PlanReActPlanner
+      after_tool_callback: content_storage_callback
+  performance_reporting_agent:
+    type: instance
+    models: [MODEL_NAME]
+    tools: [collect_metrics, store_report]
+    params:
+      name: PERFORMANCE_REPORTING_CONFIG[name]
+      description: PERFORMANCE_REPORTING_CONFIG[description]
+      instruction: PERFORMANCE_REPORTING_CONFIG[instruction].format(date=datetime.now.strftime('%Y-%m-%d'))
+      output_key: performance_report
+  root_agent.0:
+    type: instance
+    models: [MODEL_NAME]
+    tools: [ask_internal_kb, schedule_meeting]
+    params:
+      name: CUSTOMER_ENGAGEMENT_CONFIG[name]
+      instruction: CUSTOMER_ENGAGEMENT_CONFIG[instruction]
+      description: CUSTOMER_ENGAGEMENT_CONFIG[description]
+      instance: root_agent
+  root_agent.1:
+    type: instance
+    models: [gemini-2.0-flash-lite]
+    params:
+      name: OrchestratorAgent
+      instruction: ['You are SmallBizPal''s central coordinator, an AI assistant designed to help small businesses succeed.',
+        'You coordinate a team of specialized agents to provide comprehensive business support:', '1. Business Discovery Agent:
+          Conducts interviews to understand the business, goals, and target audience', '2. Marketing Generator Agent: Creates
+          marketing materials and content', '3. Customer Engagement Agent: Handles customer interactions and lead management',
+        '4. Performance Reporting Agent: Provides insights and reports on business activities', 'Your role is to:', '- Understand
+          user requests and determine the best approach', '- Route tasks to the most appropriate specialized agent', '- Coordinate
+          between agents when complex tasks require multiple specialties', '- Provide direct assistance for general business
+          questions', '- Ensure a smooth and professional user experience', 'When a user asks for help:', 1. Analyze their
+          request to understand the core need, 2. Determine which specialized agent can best assist them, 3. Delegate to that
+          agent or handle directly if it's a general inquiry, '4. For business profiling and discovery, use the Business Discovery
+          Agent', '5. Always be helpful, professional, and focused on driving business success', 'Remember: You are the user''s
+          primary point of contact, so maintain a welcoming and supportive tone.']
+      description: Coordinates all business assistance tasks and routes requests to specialized agents
+      instance: root_agent
+      sub_agents: [business_discovery_agent, marketing_generator_agent, kb_proxy_agent, performance_reporting_agent]
+
+models:
+  gemini-2.0-flash:
+    type: literal
+    agents: [content_creation_agent, business_discovery_agent]
+  gemini-2.0-flash-lite:
+    type: literal
+    agents: [root_agent.1]
+  MODEL_NAME:
+    type: literal
+    agents: [root_agent.0, kb_proxy_agent, marketing_generator_agent, performance_reporting_agent]
+
+tools:
+  agent_tool:
+    type: agent
+    agents: [marketing_generator_agent]
+    params:
+      wrapper: AgentTool
+  ask_internal_kb:
+    type: function
+    agents: [root_agent.0]
+    params:
+      description: |-
+        Asks the internal knowledge base for information about the business.
+        This uses A2A communication to securely access private business data.
+
+        Args:
+            query: The customer's question about the business.
+
+        Returns:
+            Relevant information from the internal knowledge base.
+  collect_metrics:
+    type: function
+    agents: [performance_reporting_agent]
+    params:
+      description: |-
+        Collect performance metrics from the knowledge base for a specific date.
+
+        Args:
+            tool_context: The context of the tool.
+            run_date: Date to collect metrics for (YYYY-MM-DD format).
+                     Defaults to today if not provided.
+
+        Returns:
+            Dictionary containing collected metrics data
+  retrieve_business_profile:
+    type: function
+    agents: [marketing_generator_agent]
+    params:
+      description: |-
+        Retrieve the current business profile for marketing content generation.
+
+        Args:
+            tool_context: The context of the tool.
+
+        Returns:
+            Dictionary containing business profile data including:
+            - business_name: Name of the business
+            - industry: Business industry/sector
+            - target_audience: Description of target customers
+            - unique_value_proposition: What makes the business unique
+            - brand_voice: Tone and personality for communications
+            - products_services: List of products/services offered
+            - business_goals: Current business objectives
+            - marketing_budget: Available marketing budget
+            - current_marketing_activities: Existing marketing efforts
+            - social_media_presence: Current social media accounts
+            - competitive_advantages: Key differentiators
+
+        Raises:
+            Exception: If no business profile is found
+  schedule_meeting:
+    type: function
+    agents: [root_agent.0]
+    params:
+      description: |-
+        Schedules a meeting with the business owner for a potential customer.
+
+        Args:
+            name: The name of the potential customer.
+            email: The email address of the potential customer.
+            topic: The topic or reason for the meeting.
+            tool_context: The context of the tool.
+            preferred_time: Optional preferred time for the meeting.
+
+        Returns:
+            A confirmation message to be shown to the user.
+  search_private_kb:
+    type: function
+    agents: [kb_proxy_agent]
+    params:
+      description: |-
+        Searches the private knowledge base for information relevant to the query.
+
+        For MVP, this simply returns the entire business profile data.
+        Later this will be upgraded to vector search with RAG.
+
+        Args:
+            query: The search query from the customer engagement agent
+            tool_context: The context of the tool.
+
+        Returns:
+            Complete business profile data from the knowledge base
+  store_report:
+    type: function
+    agents: [performance_reporting_agent]
+    params:
+      description: |-
+        Store a markdown report in the reports directory.
+
+        Args:
+            markdown_content: The generated markdown report content
+            report_date: Date of the report in YYYY-MM-DD format
+            tool_context: The context of the tool.
+
+        Returns:
+            Dictionary with storage status and file path information
+
+teams:
+  root_agent.1:
+    type: hierarchy
+    agents: [root_agent.1, business_discovery_agent, marketing_generator_agent, kb_proxy_agent, performance_reporting_agent]
+
+imports:
+  ADK_LOG_LEVEL: settings.ADK_LOG_LEVEL
+  ADK_WEB_PORT: settings.ADK_WEB_PORT
+  agent: agent
+  AGENT_NAME: config.AGENT_NAME
+  AGENT_TYPES: constants.AGENT_TYPES
+  AgentTool: google.adk.tools.agent_tool.AgentTool
+  Any: typing.Any
+  APP_NAME: smallbizpal.config.APP_NAME
+  APP_VERSION: smallbizpal.config.APP_VERSION
+  ask_internal_kb: tools.ask_internal_kb
+  ask_user_input: input_tools.ask_user_input
+  AVAILABLE_MODELS: models.AVAILABLE_MODELS
+  BaseModel: pydantic.BaseModel
+  BaseTool: google.adk.tools.base_tool.BaseTool
+  BUSINESS_CATEGORIES: constants.BUSINESS_CATEGORIES
+  business_discovery_agent: smallbizpal.agents.business_discovery_agent
+  BusinessProfile: smallbizpal.shared.models.business_profile.BusinessProfile
+  collect_metrics: tools.collect_metrics
+  content_creation_agent: sub_agents.content_creation_agent
+  CONTENT_CREATION_AGENT_CONFIG: smallbizpal.agents.marketing_generator.config.CONTENT_CREATION_AGENT_CONFIG
+  Counter: collections.Counter
+  CUSTOMER_ENGAGEMENT_CONFIG: config.CUSTOMER_ENGAGEMENT_CONFIG
+  CUSTOMER_SEGMENTS: constants.CUSTOMER_SEGMENTS
+  DATA_DIRECTORY: settings.DATA_DIRECTORY
+  date: datetime.date
+  datetime: datetime.datetime
+  DEBUG: settings.DEBUG
+  DEFAULT_AGENT_TIMEOUT: settings.DEFAULT_AGENT_TIMEOUT
+  DEFAULT_MODEL: models.DEFAULT_MODEL
+  DESCRIPTION: config.DESCRIPTION
+  Dict: typing.Dict
+  Field: pydantic.Field
+  get_all_business_data: storage_tools.get_all_business_data
+  get_business_profile_status: storage_tools.get_business_profile_status
+  get_model_config: models.get_model_config
+  GOOGLE_API_KEY: smallbizpal.config.GOOGLE_API_KEY
+  INSTRUCTION: config.INSTRUCTION
+  json: json
+  kb_proxy_agent: smallbizpal.agents.kb_proxy.kb_proxy_agent
+  KB_PROXY_CONFIG: smallbizpal.agents.kb_proxy.config.KB_PROXY_CONFIG
+  KNOWLEDGE_BASE_FILE: settings.KNOWLEDGE_BASE_FILE
+  knowledge_base_service: knowledge_base.knowledge_base_service
+  KnowledgeBaseService: knowledge_base.KnowledgeBaseService
+  List: typing.List
+  list_marketing_assets: storage_tools.list_marketing_assets
+  LiteLlm: google.adk.models.lite_llm.LiteLlm
+  LlmAgent: google.adk.agents.LlmAgent
+  logger: utils.logger
+  MARKETING_CHANNELS: constants.MARKETING_CHANNELS
+  marketing_generator_agent: smallbizpal.agents.marketing_generator_agent
+  MARKETING_GENERATOR_CONFIG: smallbizpal.agents.marketing_generator.config.MARKETING_GENERATOR_CONFIG
+  MAX_AGENT_ITERATIONS: settings.MAX_AGENT_ITERATIONS
+  MODEL_CONFIGS: models.MODEL_CONFIGS
+  MODEL_NAME: config.MODEL_NAME
+  Optional: typing.Optional
+  Path: pathlib.Path
+  PERFORMANCE_METRICS: constants.PERFORMANCE_METRICS
+  performance_reporting_agent: smallbizpal.agents.performance_reporting_agent
+  PERFORMANCE_REPORTING_CONFIG: config.PERFORMANCE_REPORTING_CONFIG
+  PlanReActPlanner: google.adk.planners.PlanReActPlanner
+  retrieve_business_profile: tools.retrieve_business_profile
+  root_agent: smallbizpal.agent.root_agent
+  save_content_to_kb: storage_tools.save_content_to_kb
+  schedule_meeting: tools.schedule_meeting
+  search_business_data: storage_tools.search_business_data
+  search_private_kb: smallbizpal.agents.kb_proxy.tools.search_private_kb
+  setup_logging: utils.setup_logging
+  store_business_data: storage_tools.store_business_data
+  store_report: tools.store_report
+  sys: sys
+  ToolContext: google.adk.tools.ToolContext
+  TOOLS_CONFIG: config.TOOLS_CONFIG
+  types: google.genai.types
+  UTC: datetime.UTC
+  uuid: uuid
+  validate_settings: settings.validate_settings
+
+functions:
+  __init__:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, base_storage_path]
+  _get_storage_path:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id]
+    params:
+      returns: Path
+  _load_data:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id]
+    params:
+      returns: Dict
+  _save_data:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id, data]
+    params:
+      returns: None
+  _validate_content_for_platform:
+    type: sync
+    module: smallbizpal.agents.marketing_generator.tools.storage_tools
+    args: [content, platform, content_type]
+    params:
+      returns: Dict
+  ask_internal_kb:
+    type: sync
+    module: customer_engagement.tools.knowledge_base_tools
+    args: [query, tool_context]
+    params:
+      returns: str
+  ask_user_input:
+    type: sync
+    module: smallbizpal.agents.business_discovery.tools.input_tools
+    args: [prompt]
+    params:
+      returns: str
+  clear_all_data:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id]
+    params:
+      returns: None
+  collect_metrics:
+    type: sync
+    module: smallbizpal.agents.performance_reporting.tools.metrics_tools
+    args: [tool_context, run_date]
+    params:
+      returns: Dict
+  content_storage_callback:
+    type: sync
+    module: smallbizpal.agents.marketing_generator.agent
+    args: [tool, args, tool_context, tool_response]
+    params:
+      returns: Optional[types.Content]
+  date_from_iso:
+    type: sync
+    module: smallbizpal.agents.performance_reporting.tools.metrics_tools
+    args: [timestamp_str]
+    params:
+      returns: Optional[date]
+  get_all_business_data:
+    type: sync
+    module: smallbizpal.agents.business_discovery.tools.storage_tools
+    args: [tool_context]
+    params:
+      returns: str
+  get_all_data:
+    type: sync
+    module: smallbizpal.shared.models.business_profile
+    args: [self]
+    params:
+      returns: Dict
+  get_business_data:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id]
+    params:
+      returns: Dict
+  get_business_profile:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id]
+    params:
+      returns: Optional[BusinessProfile]
+  get_business_profile_status:
+    type: sync
+    module: smallbizpal.agents.business_discovery.tools.storage_tools
+    args: [tool_context]
+    params:
+      returns: str
+  get_customer_interactions:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id]
+    params:
+      returns: list[Dict]
+  get_marketing_assets:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id]
+    params:
+      returns: list[Dict]
+  get_model_config:
+    type: sync
+    module: smallbizpal.config.models
+    args: [config_type]
+    params:
+      returns: dict
+  get_performance_data:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id, metric_name]
+    params:
+      returns: Dict
+  get_profile_summary:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id]
+    params:
+      returns: Dict
+  get_summary:
+    type: sync
+    module: smallbizpal.shared.models.business_profile
+    args: [self]
+    params:
+      returns: Dict
+  json_serializer:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [obj]
+  list_marketing_assets:
+    type: sync
+    module: smallbizpal.agents.marketing_generator.tools.storage_tools
+    args: [tool_context, content_type, platform, include_metadata]
+    params:
+      returns: Dict
+  main:
+    type: sync
+    module: smallbizpal.scripts.validate_config
+  retrieve_business_profile:
+    type: sync
+    module: smallbizpal.agents.marketing_generator.tools.business_data_tools
+    args: [tool_context]
+    params:
+      returns: Dict
+  save_content_to_kb:
+    type: sync
+    module: smallbizpal.agents.marketing_generator.tools.storage_tools
+    args: [platform, content, asset_type, tool_context]
+    params:
+      returns: str
+  schedule_meeting:
+    type: sync
+    module: customer_engagement.tools.meeting_tools
+    args: [name, email, topic, tool_context, preferred_time]
+    params:
+      returns: str
+  search_business_data:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id, search_terms]
+    params:
+      returns: Dict
+  search_data:
+    type: sync
+    module: smallbizpal.shared.models.business_profile
+    args: [self, search_terms]
+    params:
+      returns: Dict
+  search_private_kb:
+    type: sync
+    module: smallbizpal.agents.kb_proxy.tools.knowledge_search_tools
+    args: [query, tool_context]
+    params:
+      returns: str
+  store_business_data:
+    type: sync
+    module: smallbizpal.agents.business_discovery.tools.storage_tools
+    args: [data, tool_context]
+    params:
+      returns: str
+  store_business_profile:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id, profile_data]
+    params:
+      returns: None
+  store_customer_interaction:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id, interaction_data]
+    params:
+      returns: None
+  store_marketing_asset:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id, asset_data]
+    params:
+      returns: None
+  store_performance_data:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id, metric_name, metric_data]
+    params:
+      returns: None
+  store_report:
+    type: sync
+    module: smallbizpal.agents.performance_reporting.tools.report_storage_tools
+    args: [markdown_content, report_date, tool_context]
+    params:
+      returns: Dict
+  update_business_profile:
+    type: sync
+    module: smallbizpal.shared.services.knowledge_base
+    args: [self, user_id, new_data]
+    params:
+      returns: Dict
+  update_data:
+    type: sync
+    module: smallbizpal.shared.models.business_profile
+    args: [self, new_data]
+    params:
+      returns: None
+  validate_agent_config:
+    type: sync
+    module: smallbizpal.scripts.validate_config
+    args: [agent_name, agent_module_path]
+  validate_global_config:
+    type: sync
+    module: smallbizpal.scripts.validate_config
+  validate_main_agent:
+    type: sync
+    module: smallbizpal.scripts.validate_config
+
+files:
+  base_storage_path:
+    type: variable
+    actions: [read]
+    params:
+      caller: [Path]
+  file_path:
+    type: variable
+    actions: [write]
+    params:
+      caller: [open]
+      alias: [f]
+  knowledge_base.json:
+    type: literal
+    actions: [read]
+    params:
+      caller: [_get_storage_path]
+      path: [self.base_storage_path]
+  leads.json:
+    type: literal
+    actions: [read]
+    params:
+      caller: [collect_metrics, schedule_meeting]
+      path: [Path]
+  leads_dir:
+    type: variable
+    actions: [write]
+    params:
+      caller: [leads_dir.mkdir]
+  leads_file:
+    type: variable
+    actions: [read, write]
+    params:
+      caller: [open, json.load]
+      alias: [f]
+  reports_dir:
+    type: variable
+    actions: [write]
+    params:
+      caller: [reports_dir.mkdir]
+  storage_path:
+    type: variable
+    actions: [write, read]
+    params:
+      caller: [storage_path.parent.mkdir, open, json.load]
