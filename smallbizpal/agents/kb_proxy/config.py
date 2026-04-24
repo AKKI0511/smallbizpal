@@ -16,7 +16,7 @@
 
 # Agent Basic Settings
 AGENT_NAME = "KBProxyAgent"
-MODEL_NAME = "gemini-2.0-flash"
+MODEL_NAME = "gemini-2.5-flash"
 DESCRIPTION = "Proxy agent that searches the private knowledge base for customer engagement queries"
 
 # KB Proxy Agent Configuration

@@ -30,7 +30,7 @@ from smallbizpal.agents import (  # customer_engagement_agent,
 
 # Agent Basic Settings
 AGENT_NAME = "OrchestratorAgent"
-MODEL_NAME = "gemini-2.0-flash-lite"
+MODEL_NAME = "gemini-2.5-flash-lite"
 DESCRIPTION = "Coordinates all business assistance tasks and routes requests to specialized agents"
 
 # Agent Instructions/System Prompt

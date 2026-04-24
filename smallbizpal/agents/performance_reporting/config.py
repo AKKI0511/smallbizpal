@@ -18,7 +18,7 @@ from google.adk.models.lite_llm import LiteLlm  # noqa: F401
 
 # Agent Basic Settings
 AGENT_NAME = "PerformanceReportingAgent"
-MODEL_NAME = "gemini-2.0-flash"
+MODEL_NAME = "gemini-2.5-flash"
 DESCRIPTION = "Internal agent that generates daily performance reports by analyzing knowledge base data and creating human-readable summaries for business owners."
 
 # Main Agent Configuration

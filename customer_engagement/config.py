@@ -16,7 +16,7 @@
 
 # Agent Basic Settings
 AGENT_NAME = "CustomerEngagementAgent"
-MODEL_NAME = "gemini-2.0-flash"
+MODEL_NAME = "gemini-2.5-flash"
 DESCRIPTION = "AI-powered customer engagement agent that helps convert website visitors and social media interactions into qualified leads through helpful conversations and meeting scheduling."
 
 # Customer Engagement Agent Configuration

@@ -198,7 +198,7 @@ class ContentCreationOutput(BaseModel):
 # Content Creation Agent Configuration
 CONTENT_CREATION_AGENT_CONFIG = {
     "name": "ContentCreationAgent",
-    "model": "gemini-2.0-flash",
+    "model": "gemini-2.5-flash",
     "description": "Generates a single piece of high-quality, production-ready "
     "marketing content based on a specific, fact-based task.",
     "instruction": """
